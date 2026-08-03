@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KS Systems | Por Kauã Santos</title>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        ks: {
+                            darkest: '#020617',    /* Fundo extremamente escuro */
+                            dark: '#0f172a',       /* Azul escuro base */
+                            primary: '#1e3a8a',    /* Azul principal da marca */
+                            light: '#3b82f6',      /* Azul claro para destaques */
+                            white: '#ffffff',
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #333333;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent; /* Remove o brilho azul nativo ao tocar no mobile */
+        }
+
+        /* Hero Section com Canvas */
+        #hero {
+            position: relative;
+            background-color: #0f172a; 
+            overflow: hidden;
+        }
+
+        #hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.8;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Barra de rolagem personalizada */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e3a8a;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #0f172a;
+        }
+
+        /* Gradientes em textos */
+        .text-gradient {
+            background: linear-gradient(135deg, #60a5fa 0%, #ffffff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Hover nos Cards de Preço */
+        .price-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .price-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(30, 58, 138, 0.1), 0 10px 10px -5px rgba(30, 58, 138, 0.04);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-ks-primary selection:text-white">
+
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 bg-transparent py-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center">
+                <!-- Logo KS -->
+                <a href="#hero" class="flex items-center gap-3 group">
+                    <img src="logo-ks.png" alt="Logo KS Systems" class="w-12 h-12 object-contain transition-transform group-hover:scale-105">
+                    <span class="font-bold text-xl text-white tracking-tight hidden sm:block">KS Systems</span>
+                </a>
+
+                <!-- Links Desktop -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#sobre" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">A Empresa</a>
+                    <a href="#processo" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Como Funciona</a>
+                    <a href="#orcamento" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Orçamento</a>
+                    <a href="#faq" class="text-gray-300 hover:text-white transition-colors text-sm font-medium">Dúvidas</a>
+                    <a href="#contato" class="bg-ks-light/20 border border-ks-light/50 text-white px-6 py-2.5 rounded-full font-bold hover:bg-ks-light transition-colors backdrop-blur-sm">
+                        Falar com o Kauã
+                    </a>
+                </div>
+
+                <!-- Botão Menu Mobile -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-btn" class="text-white hover:text-ks-light focus:outline-none p-2">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu Mobile Dropdown -->
+        <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-ks-dark/95 backdrop-blur-md border-b border-gray-800 shadow-xl">
+            <div class="px-4 pt-8 pb-8 space-y-2 text-center">
+                <a href="#sobre" class="mobile-link block px-3 py-4 text-lg font-medium text-white hover:bg-white/10 rounded-xl transition-colors">A Empresa</a>
+                <a href="#processo" class="mobile-link block px-3 py-4 text-lg font-medium text-white hover:bg-white/10 rounded-xl transition-colors">Como Funciona</a>
+                <a href="#orcamento" class="mobile-link block px-3 py-4 text-lg font-medium text-white hover:bg-white/10 rounded-xl transition-colors">Orçamento</a>
+                <a href="#faq" class="mobile-link block px-3 py-4 text-lg font-medium text-white hover:bg-white/10 rounded-xl transition-colors">Dúvidas</a>
+                <a href="#contato" class="mobile-link inline-block mt-4 w-full bg-ks-light text-white px-6 py-4 rounded-xl font-bold text-lg shadow-lg">Falar com o Kauã</a>
+            </div>
+        </div>
+    </nav>
+
+    <section id="hero" class="min-h-screen flex items-center pt-32 pb-20 md:pt-20 md:pb-0">
+        <!-- Canvas interativo de fundo -->
+        <canvas id="hero-canvas"></canvas>
+        
+        <div class="hero-content w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-center items-center text-center">
+            
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-md mb-8 mt-4 md:mt-0">
+                <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                <span class="text-gray-300 text-xs sm:text-sm font-medium tracking-wide uppercase">Criação de sites modernos e responsivos</span>
+            </div>
+
+            <h1 class="text-4xl sm:text-5xl md:text-7xl font-extrabold text-white leading-tight mb-6 max-w-5xl tracking-tight">
+                O seu site do seu jeito,<br>
+                <span class="text-gradient">sem dor de cabeça.</span>
+            </h1>
+            
+            <p class="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
+                Você me diz o que precisa em uma conversa simples. Eu programo, construo e coloco a sua marca na internet com design profissional.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                <a href="#contato" class="px-8 py-4 bg-white text-ks-dark rounded-full font-bold text-lg hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] transition-all">
+                    Iniciar meu Projeto
+                </a>
+                <a href="#processo" class="px-8 py-4 bg-transparent border border-white/30 text-white rounded-full font-bold text-lg hover:bg-white/10 transition-all backdrop-blur-sm">
+                    Ver como funciona
+                </a>
+            </div>
+        </div>
+
+        <!-- Divisor em forma de onda pro final da seção -->
+        <div class="absolute bottom-0 left-0 w-full overflow-hidden leading-none hero-content z-20">
+            <svg class="relative block w-[calc(100%+1.3px)] h-[50px] md:h-[80px]" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z" fill="#ffffff"></path>
+            </svg>
+        </div>
+    </section>
+
+    <section id="sobre" class="py-24 bg-white relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                
+                <!-- Card de Apresentação -->
+                <div class="relative order-2 lg:order-1 mt-8 lg:mt-0">
+                    <div class="absolute inset-0 bg-ks-primary rounded-[40px] transform -rotate-3 scale-105 opacity-10"></div>
+                    <div class="bg-slate-50 border border-slate-200 p-8 sm:p-12 rounded-[40px] relative shadow-xl">
+                        
+                        <!-- Espaço para a Foto do Kauã -->
+                        <div class="relative w-28 h-28 mb-8 group">
+                            <!-- A imagem em si -->
+                            <img src="kaua-foto.jpg" alt="Kauã Santos - Desenvolvedor" onerror="this.src='https://placehold.co/400x400/1e3a8a/ffffff?text=KS'" class="w-full h-full object-cover rounded-2xl shadow-lg transform -rotate-3 transition-all duration-300 group-hover:rotate-0 group-hover:scale-105 border-4 border-white">
+                            
+                            <!-- Ícone decorativo (Badge) -->
+                            <div class="absolute -bottom-2 -right-2 w-10 h-10 bg-ks-light text-white rounded-full flex items-center justify-center text-sm shadow-md border-2 border-white transform transition-transform group-hover:rotate-12">
+                                <i class="fa-solid fa-code"></i>
+                            </div>
+                        </div>
+
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Kauã Rodrigues de Sousa Santos</h3>
+                        <p class="text-ks-primary font-semibold text-sm uppercase tracking-wider mb-6">Desenvolvedor Web & Fundador</p>
+                        
+                        <div class="space-y-4 text-gray-600">
+                            <p class="flex gap-3 items-start">
+                                <i class="fa-solid fa-check text-green-500 mt-1"></i>
+                                <span><strong>K</strong>auã + <strong>S</strong>antos = A união do meu primeiro e último nome para dar vida à <strong>KS Systems</strong>.</span>
+                            </p>
+                            <p class="flex gap-3 items-start">
+                                <i class="fa-solid fa-check text-green-500 mt-1"></i>
+                                <span>Foco em ajudar pessoas a terem uma presença digital com qualidade e sem preços abusivos.</span>
+                            </p>
+                            <p class="flex gap-3 items-start">
+                                <i class="fa-solid fa-check text-green-500 mt-1"></i>
+                                <span>Trabalho com tecnologias modernas: HTML, CSS, JavaScript, e layouts totalmente adaptáveis.</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Textos -->
+                <div class="order-1 lg:order-2">
+                    <h2 class="text-ks-light font-bold text-sm tracking-widest uppercase mb-3">Muito Prazer</h2>
+                    <h3 class="text-3xl md:text-5xl font-extrabold text-gray-900 mb-6 leading-tight">Um desenvolvedor dedicado a entender a sua necessidade.</h3>
+                    <p class="text-gray-600 text-lg mb-6 leading-relaxed">
+                        A KS Systems nasceu com um propósito bem claro: criar sites para quem realmente precisa, com um atendimento humano. Na minha empresa, você não é apenas um número de ticket.
+                    </p>
+                    <p class="text-gray-600 text-lg mb-8 leading-relaxed">
+                        Meu foco é traduzir o seu negócio para a web de forma profissional e com uma paleta visual moderna (branca e azul escura). Conversamos, definimos o seu objetivo, e eu transformo tudo em código.
+                    </p>
+                    
+                    <a href="#processo" class="inline-flex items-center gap-2 text-ks-primary font-bold hover:text-ks-light transition-colors group">
+                        Entenda o nosso fluxo de trabalho
+                        <i class="fa-solid fa-arrow-right transform group-hover:translate-x-2 transition-transform"></i>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="processo" class="py-24 bg-slate-50 border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-20">
+                <h2 class="text-ks-primary font-bold text-sm tracking-widest uppercase mb-3">Como Funciona</h2>
+                <h3 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-6">Da primeira mensagem ao site no ar</h3>
+                <p class="text-gray-600 text-lg">Sem burocracias. Meu método é focado na comunicação clara. A gente bate um papo por mensagem e o projeto ganha vida.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative">
+                <!-- Linha conectora desktop -->
+                <div class="hidden lg:block absolute top-12 left-[10%] right-[10%] h-0.5 bg-gray-200 -z-0"></div>
+
+                <!-- Passo 1 -->
+                <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 text-center relative z-10 hover:shadow-md transition-shadow">
+                    <div class="w-20 h-20 bg-blue-50 text-ks-primary rounded-full flex items-center justify-center text-3xl mx-auto mb-6 shadow-inner">
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </div>
+                    <h4 class="font-bold text-xl text-gray-900 mb-3">1. A Conversa</h4>
+                    <p class="text-gray-500 text-sm leading-relaxed">Você me manda uma mensagem e conversamos sobre a sua empresa e o que você gostaria que o site tivesse.</p>
+                </div>
+
+                <!-- Passo 2 -->
+                <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 text-center relative z-10 hover:shadow-md transition-shadow lg:mt-8">
+                    <div class="w-20 h-20 bg-blue-50 text-ks-primary rounded-full flex items-center justify-center text-3xl mx-auto mb-6 shadow-inner">
+                        <i class="fa-solid fa-handshake-simple"></i>
+                    </div>
+                    <h4 class="font-bold text-xl text-gray-900 mb-3">2. O Acordo</h4>
+                    <p class="text-gray-500 text-sm leading-relaxed">Chegamos no melhor plano para você: uma mensalidade com suporte contínuo ou a compra vitalícia do site.</p>
+                </div>
+
+                <!-- Passo 3 -->
+                <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 text-center relative z-10 hover:shadow-md transition-shadow">
+                    <div class="w-20 h-20 bg-blue-50 text-ks-primary rounded-full flex items-center justify-center text-3xl mx-auto mb-6 shadow-inner">
+                        <i class="fa-solid fa-laptop-code"></i>
+                    </div>
+                    <h4 class="font-bold text-xl text-gray-900 mb-3">3. Desenvolvimento</h4>
+                    <p class="text-gray-500 text-sm leading-relaxed">Eu crio toda a estrutura em HTML, CSS e JS, aplicando os detalhes e funcionalidades que combinamos na conversa.</p>
+                </div>
+
+                <!-- Passo 4 -->
+                <div class="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 text-center relative z-10 hover:shadow-md transition-shadow lg:mt-8">
+                    <div class="w-20 h-20 bg-ks-primary text-white rounded-full flex items-center justify-center text-3xl mx-auto mb-6 shadow-lg">
+                        <i class="fa-solid fa-rocket"></i>
+                    </div>
+                    <h4 class="font-bold text-xl text-gray-900 mb-3">4. Lançamento</h4>
+                    <p class="text-gray-500 text-sm leading-relaxed">Revisamos juntos, hospedo na plataforma ideal e seu site vai ao ar, pronto para impressionar os clientes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="orcamento" class="py-24 bg-ks-dark text-white relative overflow-hidden">
+        <!-- Detalhes de Fundo abstratos -->
+        <div class="absolute top-0 right-0 w-96 h-96 bg-ks-light opacity-10 rounded-full blur-[100px] transform translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-ks-primary opacity-20 rounded-full blur-[100px] transform -translate-x-1/2 translate-y-1/2 pointer-events-none"></div>
+
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <h2 class="text-ks-light font-bold text-sm tracking-widest uppercase mb-3">Investimento Flexível</h2>
+            <h3 class="text-3xl md:text-5xl font-extrabold mb-8 text-white">Projetos sob medida para o seu negócio</h3>
+            <p class="text-gray-300 text-lg md:text-xl leading-relaxed mb-12">
+                Acredito que cada empresa é única, por isso não trabalho com pacotes engessados ou "carrinhos de compra". Nós conversamos sobre as suas necessidades e definimos juntos o formato ideal: seja uma <strong class="text-white">mensalidade acessível de R$ 250</strong> para eu cuidar de tudo, ou um <strong class="text-white">valor único de R$ 1.500</strong> para o site ser 100% seu.
+            </p>
+
+            <div class="bg-white/5 border border-white/10 rounded-[2.5rem] p-8 md:p-12 backdrop-blur-md shadow-2xl relative overflow-hidden group">
+                <!-- Efeito Hover no card -->
+                <div class="absolute inset-0 bg-gradient-to-r from-ks-light/0 via-ks-light/5 to-ks-light/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                
+                <div class="relative z-10">
+                    <div class="w-20 h-20 bg-[#25D366] rounded-full flex items-center justify-center text-4xl text-white mx-auto mb-6 shadow-[0_0_30px_rgba(37,211,102,0.4)] animate-bounce" style="animation-duration: 2.5s;">
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </div>
+                    
+                    <h4 class="text-2xl md:text-3xl font-bold text-white mb-4">Vamos montar o seu orçamento?</h4>
+                    <p class="text-gray-400 mb-8 max-w-lg mx-auto text-lg">
+                        Me chame agora no WhatsApp. Eu mesmo, Kauã, vou te atender, tirar suas dúvidas e criar um orçamento sem nenhum compromisso.
+                    </p>
+                    
+                    <a href="https://api.whatsapp.com/send?phone=5518997648623&text=Ol%C3%A1%20Kau%C3%A3!%20Vim%20pelo%20seu%20site%20e%20gostaria%20de%20conversar%20sobre%20a%20cria%C3%A7%C3%A3o%20de%20um%20site." target="_blank" class="inline-flex flex-col sm:flex-row items-center justify-center gap-3 bg-[#25D366] text-white px-8 py-4 rounded-full font-bold text-xl hover:bg-[#1EBE5D] transition-all shadow-lg hover:shadow-[#25D366]/40 hover:-translate-y-1">
+                        <i class="fa-brands fa-whatsapp text-2xl"></i>
+                        +55 18 99764-8623
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NOVA SEÇÃO: FAQ (Perguntas Frequentes) -->
+    <section id="faq" class="py-24 bg-slate-50 border-t border-slate-200">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-ks-primary font-bold text-sm tracking-widest uppercase mb-3">Ficou alguma dúvida?</h2>
+                <h3 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-6">Perguntas Frequentes</h3>
+                <p class="text-gray-600 text-lg">As principais dúvidas dos meus clientes respondidas de forma rápida para você.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- Pergunta 1 -->
+                <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                    <h4 class="font-bold text-gray-900 text-lg mb-3 flex items-start gap-3">
+                        <i class="fa-solid fa-circle-question text-ks-light mt-1"></i>
+                        O site vai funcionar no celular?
+                    </h4>
+                    <p class="text-gray-600 text-sm leading-relaxed">Com certeza! Todos os sites desenvolvidos pela KS Systems são 100% responsivos. Isso significa que eles se adaptam perfeitamente para entregar a melhor experiência em celulares, tablets e computadores.</p>
+                </div>
+
+                <!-- Pergunta 2 -->
+                <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                    <h4 class="font-bold text-gray-900 text-lg mb-3 flex items-start gap-3">
+                        <i class="fa-solid fa-code text-ks-light mt-1"></i>
+                        Quanto tempo demora para ficar pronto?
+                    </h4>
+                    <p class="text-gray-600 text-sm leading-relaxed">O prazo médio é de 7 a 15 dias úteis, dependendo da complexidade do que conversarmos. O foco é entregar rápido, mas garantindo extrema qualidade no código e no design.</p>
+                </div>
+
+                <!-- Pergunta 3 -->
+                <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                    <h4 class="font-bold text-gray-900 text-lg mb-3 flex items-start gap-3">
+                        <i class="fa-solid fa-server text-ks-light mt-1"></i>
+                        Eu preciso pagar domínio e hospedagem?
+                    </h4>
+                    <p class="text-gray-600 text-sm leading-relaxed">Não! Eu utilizo uma plataforma moderna e segura chamada Vercel, que permite hospedar o seu site com alta velocidade e sem custos adicionais de servidor. O seu site terá um endereço gratuito no formato <strong>suaempresa.vercel.app</strong>. Ou seja, você fica livre daquelas taxas anuais chatas de renovação de domínio e hospedagem!</p>
+                </div>
+
+                <!-- Pergunta 4 -->
+                <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                    <h4 class="font-bold text-gray-900 text-lg mb-3 flex items-start gap-3">
+                        <i class="fa-solid fa-pen-to-square text-ks-light mt-1"></i>
+                        Posso alterar textos e fotos depois?
+                    </h4>
+                    <p class="text-gray-600 text-sm leading-relaxed">Sim! Meu atendimento é humanizado e contínuo. Se você estiver no plano mensal, basta me mandar uma mensagem no WhatsApp com a nova foto ou texto e eu realizo a atualização para você.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="contato" class="py-24 bg-ks-primary relative overflow-hidden">
+        <!-- Efeitos de Fundo (Ondas SVGs para estilizar o bloco de contato azul) -->
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 32px 32px;"></div>
+
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            
+            <div class="w-24 h-24 bg-white/10 rounded-full flex items-center justify-center text-white text-4xl mx-auto mb-8 backdrop-blur-sm border border-white/20">
+                <i class="fa-regular fa-paper-plane"></i>
+            </div>
+
+            <h2 class="text-3xl md:text-5xl font-extrabold text-white mb-6">Chegou a hora de ter o seu site!</h2>
+            <p class="text-xl text-blue-100 mb-12 max-w-2xl mx-auto font-light">
+                Esqueça formulários longos. Clique em um dos botões abaixo e me conte como posso ajudar a sua empresa no mundo digital. Eu mesmo, Kauã, irei te responder!
+            </p>
+
+            <div class="flex flex-col md:flex-row justify-center items-center gap-6 flex-wrap">
+                <button onclick="chamarWhatsApp()" class="group w-full md:w-auto flex items-center justify-center gap-3 bg-white text-ks-dark px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 shadow-xl transform hover:-translate-y-1 hover:shadow-2xl">
+                    <i class="fa-brands fa-whatsapp text-2xl text-green-500 group-hover:scale-110 transition-transform duration-300"></i>
+                    WhatsApp
+                </button>
+                
+                <a href="https://instagram.com/ks.systemss" target="_blank" class="group w-full md:w-auto flex items-center justify-center gap-3 bg-gradient-to-r from-[#833ab4] via-[#fd1d1d] to-[#fcb045] text-white px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 shadow-xl transform hover:-translate-y-1 hover:shadow-2xl">
+                    <i class="fa-brands fa-instagram text-2xl group-hover:scale-110 transition-transform duration-300"></i>
+                    Instagram
+                </a>
+
+                <button onclick="enviarEmail()" class="group w-full md:w-auto flex items-center justify-center gap-3 bg-ks-dark border border-gray-700 text-white px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 shadow-xl transform hover:-translate-y-1 hover:shadow-2xl">
+                    <i class="fa-regular fa-envelope text-2xl text-ks-light group-hover:scale-110 transition-transform duration-300"></i>
+                    E-mail
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-ks-darkest text-gray-500 py-12 border-t border-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+                <!-- Marca Footer -->
+                <div class="flex items-center gap-3">
+                    <img src="logo-ks.png" alt="Logo KS Systems" class="w-10 h-10 object-contain">
+                    <div>
+                        <span class="block font-bold text-white text-lg leading-tight">KS Systems</span>
+                        <span class="text-xs">Por Kauã Santos</span>
+                    </div>
+                </div>
+
+                <!-- Info Legal -->
+                <div class="text-center md:text-right text-sm">
+                    <p>&copy; <span id="current-year"></span> KS Systems. Todos os direitos reservados.</p>
+                    <p class="mt-1 flex items-center justify-center md:justify-end gap-1">
+                        Feito com código limpo e <i class="fa-solid fa-mug-hot text-xs text-gray-600"></i>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal Customizado (Substitui os alerts nativos) -->
+    <div id="custom-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/60 backdrop-blur-sm opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-3xl p-8 max-w-sm w-full mx-4 transform scale-95 transition-transform duration-300 text-center shadow-2xl relative">
+            
+            <button onclick="fecharModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-900 transition-colors">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+            
+            <div id="modal-icon" class="w-16 h-16 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
+                <!-- Icon inserted via JS -->
+            </div>
+            
+            <h3 id="modal-title" class="text-2xl font-bold text-gray-900 mb-2"></h3>
+            <p id="modal-desc" class="text-gray-600 text-sm mb-6"></p>
+            
+            <button onclick="fecharModal()" class="w-full bg-ks-primary text-white font-bold py-3 rounded-xl hover:bg-ks-dark transition-colors">
+                Entendi
+            </button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Set ano dinâmico footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // Navbar Scroll Effect e Mobile Menu
+        const navbar = document.getElementById('navbar');
+        const mobileBtn = document.getElementById('mobile-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-ks-dark/95', 'backdrop-blur-md', 'shadow-lg');
+                navbar.classList.remove('bg-transparent', 'py-4');
+            } else {
+                navbar.classList.remove('bg-ks-dark/95', 'backdrop-blur-md', 'shadow-lg');
+                navbar.classList.add('bg-transparent', 'py-4');
+            }
+        });
+
+        mobileBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // --- SISTEMA DE MODAL (Evita Alerts) ---
+        const modal = document.getElementById('custom-modal');
+        const modalContent = modal.querySelector('div');
+        const mIcon = document.getElementById('modal-icon');
+        const mTitle = document.getElementById('modal-title');
+        const mDesc = document.getElementById('modal-desc');
+
+        function abrirModal(tipo, titulo, desc) {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            // Timeout para animação
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+            }, 10);
+
+            mTitle.innerText = titulo;
+            mDesc.innerText = desc;
+
+            if(tipo === 'whatsapp') {
+                mIcon.className = 'w-16 h-16 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 bg-green-100 text-green-500';
+                mIcon.innerHTML = '<i class="fa-brands fa-whatsapp"></i>';
+            } else if (tipo === 'email') {
+                mIcon.className = 'w-16 h-16 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 bg-blue-100 text-ks-primary';
+                mIcon.innerHTML = '<i class="fa-regular fa-envelope"></i>';
+            } else {
+                mIcon.className = 'w-16 h-16 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 bg-gray-100 text-gray-700';
+                mIcon.innerHTML = '<i class="fa-solid fa-info"></i>';
+            }
+        }
+
+        function fecharModal() {
+            modal.classList.add('opacity-0');
+            modalContent.classList.add('scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300);
+        }
+
+        // Funções de Botões de Contato
+        function chamarWhatsApp() {
+            window.open('https://api.whatsapp.com/send?phone=5518997648623&text=Ol%C3%A1%20Kau%C3%A3!%20Vim%20pelo%20seu%20site%20e%20gostaria%20de%20conversar%20sobre%20um%20projeto!', '_blank');
+        }
+
+        function enviarEmail() {
+            window.location.href = "mailto:kssystems26@gmail.com?subject=Orçamento de Site KS Systems";
+            abrirModal('email', 'Cliente de E-mail', 'Seu aplicativo de e-mail padrão deve ter sido aberto. Caso não abra, envie um e-mail para: kssystems26@gmail.com');
+        }
+
+        // --- CANVAS NETWORK ANIMATION (Fundo da Hero Section) ---
+        const canvas = document.getElementById('hero-canvas');
+        const ctx = canvas.getContext('2d');
+        const heroSection = document.getElementById('hero');
+
+        let particlesArray = [];
+        let mouse = {
+            x: null,
+            y: null,
+            radius: 150
+        }
+
+        // Ajuste no redimensionamento
+        function resizeCanvas() {
+            canvas.width = heroSection.offsetWidth;
+            canvas.height = heroSection.offsetHeight;
+        }
+
+        let currentWidth = window.innerWidth;
+        window.addEventListener('resize', () => {
+            // No mobile, a barra do navegador some/aparece ao rolar a página disparando o resize.
+            // Esta checagem garante que o canvas só reinicie se a LARGURA da tela mudar (ex: deitar o celular).
+            if (window.innerWidth !== currentWidth) {
+                currentWidth = window.innerWidth;
+                resizeCanvas();
+                init();
+            }
+        });
+
+        // Posição do Mouse globalmente (mapeado para o topo)
+        window.addEventListener('mousemove', (e) => {
+            if(window.scrollY < heroSection.offsetHeight) {
+                mouse.x = e.x;
+                mouse.y = e.y - window.scrollY; // Ajusta posição baseada no scroll para n quebrar se descer um pouquinho
+            } else {
+                mouse.x = null;
+                mouse.y = null;
+            }
+        });
+        
+        // Suporte a Toque (Touch) para usuários de Mobile e Tablet interagirem com o fundo
+        window.addEventListener('touchmove', (e) => {
+            if(window.scrollY < heroSection.offsetHeight) {
+                mouse.x = e.touches[0].clientX;
+                mouse.y = e.touches[0].clientY - window.scrollY;
+            }
+        }, { passive: true });
+
+        window.addEventListener('touchend', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        window.addEventListener('mouseleave', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        // Objeto Particula (Nodo)
+        class Particle {
+            constructor(x, y, dx, dy, size, color) {
+                this.x = x;
+                this.y = y;
+                this.dx = dx;
+                this.dy = dy;
+                this.size = size;
+                this.color = color;
+            }
+            
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+
+            update() {
+                // Rebotar nos cantos
+                if (this.x > canvas.width || this.x < 0) this.dx = -this.dx;
+                if (this.y > canvas.height || this.y < 0) this.dy = -this.dy;
+                
+                // Repulsão suave do mouse
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx*dx + dy*dy);
+                
+                if (distance < mouse.radius + this.size){
+                    if (mouse.x < this.x && this.x < canvas.width - this.size * 10) this.x += 1;
+                    if (mouse.x > this.x && this.x > this.size * 10) this.x -= 1;
+                    if (mouse.y < this.y && this.y < canvas.height - this.size * 10) this.y += 1;
+                    if (mouse.y > this.y && this.y > this.size * 10) this.y -= 1;
+                }
+
+                this.x += this.dx;
+                this.y += this.dy;
+                this.draw();
+            }
+        }
+
+        // Preenche o array com particulas
+        function init() {
+            particlesArray = [];
+            let numOfParticles = (canvas.width * canvas.height) / 10000;
+            // limite para não fritar PC antigo
+            if(numOfParticles > 150) numOfParticles = 150; 
+            
+            for (let i = 0; i < numOfParticles; i++) {
+                let size = (Math.random() * 2) + 1;
+                let x = (Math.random() * ((canvas.width - size * 2) - (size * 2)) + size * 2);
+                let y = (Math.random() * ((canvas.height - size * 2) - (size * 2)) + size * 2);
+                let dx = (Math.random() * 1) - 0.5;
+                let dy = (Math.random() * 1) - 0.5;
+                
+                // Mistura entre Branco e o Azul da marca (blue-400 pra destacar no escuro)
+                let color = Math.random() > 0.4 ? 'rgba(255, 255, 255, 0.6)' : 'rgba(96, 165, 250, 0.6)';
+                
+                particlesArray.push(new Particle(x, y, dx, dy, size, color));
+            }
+        }
+
+        // Conecta as linhas 
+        function connect() {
+            for (let a = 0; a < particlesArray.length; a++) {
+                for (let b = a; b < particlesArray.length; b++) {
+                    let dx = particlesArray[a].x - particlesArray[b].x;
+                    let dy = particlesArray[a].y - particlesArray[b].y;
+                    let distance = dx * dx + dy * dy;
+                    
+                    if (distance < (canvas.width/9) * (canvas.height/9)) {
+                        let opacity = 1 - (distance / 15000); // 15000 refina a distância onde a linha some
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${opacity * 0.15})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+            }
+            connect();
+        }
+
+        // Dispara ao carregar
+        window.onload = () => {
+            resizeCanvas();
+            init();
+            animate();
+        };
+
+    </script>
+</body>
+</html>
